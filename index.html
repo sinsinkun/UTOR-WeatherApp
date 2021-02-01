@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" 
+    rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" 
+    crossorigin="anonymous" />
+</head>
+
+<body>
+    <style>
+        .vis {
+            background-color: lightgrey;
+            min-width: 10px;
+            min-height: 10px;
+        }
+    </style>
+    <div class="container-md mt-3 vis" style="max-width: 900px;">
+        <div class="row px-2 py-2">
+            <div class="col-4">
+                <!-- Search bar -->
+                <div class="row">
+                    <input type="text" class="form-control w-100" id="searchVar" placeholder="Search city..." />
+                </div>
+                <!-- Past results -->
+                <div class="row mt-2">
+                    <h5>Past search results</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="link-primary">Cras justo odio</a></li>
+                        <li><a href="#" class="link-primary">Cras justo odio</a></li>
+                        <li><a href="#" class="link-primary">Cras justo odio</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="row mt-2">
+                    <h4>Weather Information</h4>
+                </div>
+                <!-- List of current place information -->
+                <div class="row mt-2 ms-2">
+                    <ul class="list-unstyled" style="line-height: 2rem;">
+                        <li>Temperature</li>
+                        <li>Humidity</li>
+                        <li>Pressure</li>
+                        <li>UV Index</li>
+                    </ul>
+                </div>
+                <!-- Today + next 4 days' weather forecast -->
+                <div class="row">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src='script.js'></script>
+
+</body>
+
+</html>
