@@ -1,4 +1,4 @@
-apiKey = '88547ae129179c5b0317315ddf40567c';
+const apiKey = '88547ae129179c5b0317315ddf40567c';
 
 // Load in saved locations
 let cityList = localStorage.cityList ? JSON.parse(localStorage.cityList): [];
@@ -7,7 +7,7 @@ if (cityList.length > 0) {
     document.querySelector('#resetRow').classList.remove('d-none');
     for (let i=0; i<cityList.length; i++) {
         document.querySelector('#searchList').innerHTML +=
-        `<li><button type="button" class="btn btn-link" onclick=pastSearch('${cityList[i]}')>${cityList[i]}</button></li>`;
+        `<li><button type="button" class="btn btn-link" onclick=queryAPI('${cityList[i]}')>${cityList[i]}</button></li>`;
     }
 }
 
@@ -25,21 +25,8 @@ async function onKeyPress(e) {
         document.querySelector('#searchRow').classList.remove('d-none');
         document.querySelector('#resetRow').classList.remove('d-none');
         // send API request
-        let errCaught = false;
-        let weather = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${searchVar}&appid=${apiKey}`)
-        .then( r => r.json()).catch((error) => {
-            console.error('Error:', error);
-            errCaught = true;
-        });
-        if (Object.keys(weather).length > 0) handleWeather(weather);
-        let forecast = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${searchVar}&appid=${apiKey}`)
-        .then( r => r.json()).catch((error) => {
-            console.error('Error:', error);
-            errCaught = true;
-        });
-        if (Object.keys(forecast).length > 0) handleForecast(forecast);
-        if (errCaught) alert('Could not find city. Please try again.');
-        // check if entry already in list
+        queryAPI(searchVar);
+        // check if entry already in past search list
         let entryExist = false;
         for (let i=0; i<cityList.length; i++) {
             if (searchVar === cityList[i]) {
@@ -51,23 +38,62 @@ async function onKeyPress(e) {
         if (!entryExist) {
             cityList.push(searchVar);
             document.querySelector('#searchList').innerHTML +=
-            `<li><button type="button" class="btn btn-link" onclick=pastSearch('${searchVar}')>${searchVar}</button></li>`;
+            `<li><button type="button" class="btn btn-link" onclick=queryAPI('${searchVar}')>${searchVar}</button></li>`;
             localStorage.cityList = JSON.stringify(cityList);
         }
     }
 }
 
+async function queryAPI(city) {
+    // send API request
+    let lat, lon, errCaught = false;
+    let weather = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`)
+    .then( r => r.json()).catch((error) => {
+        console.error('Error:', error);
+        errCaught = true;
+    });
+    if (Object.keys(weather).length > 0) {
+        handleWeather(weather);
+        lat = weather.coord.lat;
+        lon = weather.coord.lon;
+    }
+    let uvInfo = await fetch(`http://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=${apiKey}`)
+    .then( r => r.json()).catch((error) => {
+        console.error('Error:', error);
+        errCaught = true;
+    });
+    if (Object.keys(weather).length > 0) handleUV(uvInfo);
+    let forecast = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`)
+    .then( r => r.json()).catch((error) => {
+        console.error('Error:', error);
+        errCaught = true;
+    });
+    if (Object.keys(forecast).length > 0) handleForecast(forecast);
+    // Handle error
+    if (errCaught) alert('Could not find city. Please try again.');
+}
+
 function handleWeather(obj) {
     // print to HTML
-    console.log(obj);
     document.querySelector('#cityName').innerHTML = `${obj.name}, ${obj.sys.country}'s `;
     document.querySelector('#weatherInfo').innerHTML =
     `<li>Weather: ${obj.weather[0].main}</li>
     <li>Temperature: ${(obj.main.temp-273.15).toFixed(2)}&#176;C</li>
     <li>Humidity: ${obj.main.humidity}%</li>
-    <li>Pressure: ${obj.main.pressure/10} kPa</li>`;
+    <li>Pressure: ${obj.main.pressure/10} kPa</li>
+    <li>Wind Speed: ${obj.wind.speed} m/s</li>`;
     document.querySelector('#weatherIcon').innerHTML =
     `<img src="http://openweathermap.org/img/wn/${obj.weather[0].icon}@2x.png" alt="weather icon" />`;
+}
+
+function handleUV(uvInfo) {
+    let output, color;
+    if (uvInfo.value < 2.5) {output = 'low'; color='green';}
+    else if (uvInfo.value < 5.5) {output = 'moderate'; color='orange';}
+    else if (uvInfo.value < 8) {output = 'high'; color='red';}
+    else {output='very high'; color='purple';}
+    document.querySelector('#weatherInfo').innerHTML +=
+    `<li>UV Index: <b style='color:${color}'>${output}</b></li>`;
 }
 
 function handleForecast(obj) {
@@ -82,26 +108,12 @@ function handleForecast(obj) {
                     <h5 class="card-title">${obj.list[i].dt_txt.split(" ",1)}</h5>
                     <img src="http://openweathermap.org/img/wn/${obj.list[i].weather[0].icon}@2x.png" alt="weather icon"/>
                     <p class="card-text">${obj.list[i].weather[0].main}</p>
-                    <p class="card-text">${(obj.list[i].main.temp-273.15).toFixed(2)}&#176;C</p>
+                    <span class="card-text">Temperature: ${(obj.list[i].main.temp-273.15).toFixed(2)}&#176;C</span>
+                    <span class="card-text">Humidity: ${obj.list[i].main.humidity}%</span>
                 </div>
             </div>
         </div>`;
     }
-}
-
-async function pastSearch(btn) {
-    // send API request
-    let weather = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${btn}&appid=${apiKey}`)
-    .then( r => r.json()).catch((error) => {
-        console.error('Error:', error);
-        alert('Could not find city. Please try again.');
-    });
-    if (Object.keys(weather).length > 0) handleWeather(weather);
-    let forecast = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${btn}&appid=${apiKey}`)
-    .then( r => r.json()).catch((error) => {
-        console.error('Error:', error);
-    });
-    if (Object.keys(forecast).length > 0) handleForecast(forecast);
 }
 
 function resetList() {
