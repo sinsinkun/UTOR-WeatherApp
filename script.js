@@ -18,7 +18,6 @@ document.querySelector('#resetList').addEventListener('click', resetList);
 // search bar search
 async function onKeyPress(e) {
     if (e.key === 'Enter') {
-
         let searchVar = encodeURI(document.querySelector('#searchVar').value);
         searchVar = searchVar[0].toUpperCase() + searchVar.substring(1);
         // display history
@@ -46,31 +45,33 @@ async function onKeyPress(e) {
 
 async function queryAPI(city) {
     // send API request
-    let lat, lon, errCaught = false;
+    let lat='', lon='';
+    let errCaught = false, errCode='', errMessage='';
     let weather = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`)
-    .then( r => r.json()).catch((error) => {
-        console.error('Error:', error);
-        errCaught = true;
-    });
-    if (Object.keys(weather).length > 0) {
+    .then( r => r.json());
+    if (weather.cod == 200) {
         handleWeather(weather);
         lat = weather.coord.lat;
         lon = weather.coord.lon;
     }
+    else {
+        errCode = weather.cod;
+        errMessage = weather.message;
+        errCaught = true;
+    }
     let uvInfo = await fetch(`http://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=${apiKey}`)
-    .then( r => r.json()).catch((error) => {
-        console.error('Error:', error);
-        errCaught = true;
-    });
-    if (Object.keys(weather).length > 0) handleUV(uvInfo);
+    .then( r => r.json()).catch(() => console.error('UV Info Error'));
+    if (uvInfo) handleUV(uvInfo);
     let forecast = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`)
-    .then( r => r.json()).catch((error) => {
-        console.error('Error:', error);
+    .then( r => r.json())
+    if (forecast.cod == 200) handleForecast(forecast);
+    else {
+        errCode = forecast.cod;
+        errMessage = forecast.message;
         errCaught = true;
-    });
-    if (Object.keys(forecast).length > 0) handleForecast(forecast);
+    }
     // Handle error
-    if (errCaught) alert('Could not find city. Please try again.');
+    if (errCaught) alert(`Error ${errCode}: ${errMessage}`);
 }
 
 function handleWeather(obj) {
