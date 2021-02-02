@@ -5,56 +5,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" 
-    rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" 
-    crossorigin="anonymous" />
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous" />
 </head>
 
 <body>
     <style>
-        .vis {
-            background-color: lightgrey;
-            min-width: 10px;
-            min-height: 10px;
+        .card {
+            background-color: rgb(171, 183, 221);
         }
     </style>
-    <div class="container-md mt-3 vis" style="max-width: 900px;">
-        <div class="row px-2 py-2">
-            <div class="col-4">
+    <div class="container-md mt-3" style="max-width: 1024px; background-color:rgb(166, 225, 233)">
+        <div class="row">
+            <div class="col-md-3">
                 <!-- Search bar -->
-                <div class="row">
+                <div class="row py-2 px-2">
                     <input type="text" class="form-control w-100" id="searchVar" placeholder="Search city..." />
                 </div>
                 <!-- Past results -->
-                <div class="row mt-2">
+                <div class="row d-none" id="searchRow">
                     <h5>Past search results</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="link-primary">Cras justo odio</a></li>
-                        <li><a href="#" class="link-primary">Cras justo odio</a></li>
-                        <li><a href="#" class="link-primary">Cras justo odio</a></li>
-                    </ul>
+                    <ul class="list-unstyled" id="searchList"></ul>
+                </div>
+                <div class="row d-none" id="resetRow">
+                    <div class="text-end">
+                        <button class="btn btn-link" id="resetList">Clear search results</button>
+                    </div>
                 </div>
             </div>
-            <div class="col-8">
-                <div class="row mt-2">
-                    <h4>Weather Information</h4>
+            <div class="col-md-9">
+                <div class="row mt-3">
+                    <h4><span id="cityName"></span>Weather Information</h4>
                 </div>
                 <!-- List of current place information -->
                 <div class="row mt-2 ms-2">
-                    <ul class="list-unstyled" style="line-height: 2rem;">
-                        <li>Temperature</li>
-                        <li>Humidity</li>
-                        <li>Pressure</li>
-                        <li>UV Index</li>
-                    </ul>
+                    <div class="col-6 col-md-4">
+                        <ul class="list-unstyled" style="line-height: 2rem;" id="weatherInfo"></ul>
+                    </div>
+                    <div class="col-auto" id="weatherIcon"></div>
+                </div>
+                <div class="row d-none" id="forecastHead">
+                    <h4>Future Forecast</h4>
                 </div>
                 <!-- Today + next 4 days' weather forecast -->
-                <div class="row">
-                    
-                </div>
+                <div class="row gy-2 text-center" id="forecastInfo"></div>
             </div>
         </div>
+        <br />
     </div>
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
     <script src='script.js'></script>
 
 </body>

@@ -5,11 +5,11 @@ weather data for cities across the world. Will also save search history for ease
 
 ## Link to Live Website
 
-...
+https://sinsinkun.github.io/UTOR-WeatherApp
 
 ## Screenshot
 
-...
+![Screenshot](./screenshot.png)
 
 ## Acceptance Criteria
 
