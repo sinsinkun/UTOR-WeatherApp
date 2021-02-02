@@ -1,4 +1,4 @@
-const apiKey = '88547ae129179c5b0317315ddf40567c';
+const apiKey = process.env.OWM_KEY;
 
 // Load in saved locations
 let cityList = localStorage.cityList ? JSON.parse(localStorage.cityList): [];
