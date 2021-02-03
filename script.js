@@ -59,10 +59,10 @@ async function queryAPI(city) {
         errMessage = weather.message;
         errCaught = true;
     }
-    let uvInfo = await fetch(`http://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=${apiKey}`)
+    let uvInfo = await fetch(`https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=${apiKey}`)
     .then( r => r.json()).catch(() => console.error('UV Info Error'));
     if (uvInfo) handleUV(uvInfo);
-    let forecast = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`)
+    let forecast = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`)
     .then( r => r.json())
     if (forecast.cod == 200) handleForecast(forecast);
     else {
@@ -84,7 +84,7 @@ function handleWeather(obj) {
     <li>Pressure: ${obj.main.pressure/10} kPa</li>
     <li>Wind Speed: ${obj.wind.speed} m/s</li>`;
     document.querySelector('#weatherIcon').innerHTML =
-    `<img src="http://openweathermap.org/img/wn/${obj.weather[0].icon}@2x.png" alt="weather icon" />`;
+    `<img src="https://openweathermap.org/img/wn/${obj.weather[0].icon}@2x.png" alt="weather icon" />`;
 }
 
 function handleUV(uvInfo) {
@@ -107,7 +107,7 @@ function handleForecast(obj) {
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">${obj.list[i].dt_txt.split(" ",1)}</h5>
-                    <img src="http://openweathermap.org/img/wn/${obj.list[i].weather[0].icon}@2x.png" alt="weather icon"/>
+                    <img src="https://openweathermap.org/img/wn/${obj.list[i].weather[0].icon}@2x.png" alt="weather icon"/>
                     <p class="card-text">${obj.list[i].weather[0].main}</p>
                     <span class="card-text">Temperature: ${(obj.list[i].main.temp-273.15).toFixed(2)}&#176;C</span>
                     <span class="card-text">Humidity: ${obj.list[i].main.humidity}%</span>
