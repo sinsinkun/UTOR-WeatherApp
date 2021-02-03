@@ -18,7 +18,7 @@ document.querySelector('#resetList').addEventListener('click', resetList);
 // search bar search
 async function onKeyPress(e) {
     if (e.key === 'Enter') {
-        let searchVar = encodeURI(document.querySelector('#searchVar').value);
+        let searchVar = document.querySelector('#searchVar').value;
         searchVar = searchVar[0].toUpperCase() + searchVar.substring(1);
         // display history
         document.querySelector('#searchRow').classList.remove('d-none');
@@ -47,7 +47,7 @@ async function queryAPI(city) {
     // send API request
     let lat='', lon='';
     let errCaught = false, errCode='', errMessage='';
-    let weather = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`)
+    let weather = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`)
     .then( r => r.json());
     if (weather.cod == 200) {
         handleWeather(weather);
